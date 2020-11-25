@@ -1,0 +1,36 @@
+{
+	"name": "OrderBlobProcessor",
+	"properties": {
+		"description": "this pipeline will process incoming internet blob files",
+		"activities": [
+			{
+				"name": "LoadProcessableBlob",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[uspGetProcessableBlobs]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "BlobMetadataDatadest",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"concurrency": 1,
+		"annotations": []
+	}
+}
