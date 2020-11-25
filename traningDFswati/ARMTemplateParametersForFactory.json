@@ -8,8 +8,17 @@
 		"BlobMetaDataSQLConnection_connectionString": {
 			"value": ""
 		},
+		"OrganizedDLSConnection_accountKey": {
+			"value": ""
+		},
 		"trainingkeyvaultconnection_properties_typeProperties_baseUrl": {
 			"value": "https://trainingkeyvaultv2swati.vault.azure.net/"
+		},
+		"DLSTargetProviderFunctionConnection_properties_typeProperties_functionAppUrl": {
+			"value": "https://dlstargetprovider20201125160234.azurewebsites.net"
+		},
+		"OrganizedDLSConnection_properties_typeProperties_url": {
+			"value": "https://trainingdlsswati.dfs.core.windows.net"
 		}
 	}
 }
