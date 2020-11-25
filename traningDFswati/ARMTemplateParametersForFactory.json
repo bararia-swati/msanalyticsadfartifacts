@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "traningDFswati"
 		},
+		"BlobMetaDataSQLConnection_connectionString": {
+			"value": ""
+		},
 		"trainingkeyvaultconnection_properties_typeProperties_baseUrl": {
 			"value": "https://trainingkeyvaultv2swati.vault.azure.net/"
 		}

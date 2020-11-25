@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "traningDFswati"
 		},
+		"BlobMetaDataSQLConnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'BlobMetaDataSQLConnection'"
+		},
 		"trainingkeyvaultconnection_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://trainingkeyvaultv2swati.vault.azure.net/"
@@ -37,6 +41,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"BlobMetaDataSQLConnection_connectionString": {
+						"value": "[parameters('BlobMetaDataSQLConnection_connectionString')]"
 					},
 					"trainingkeyvaultconnection_properties_typeProperties_baseUrl": {
 						"value": "[parameters('trainingkeyvaultconnection_properties_typeProperties_baseUrl')]"
