@@ -1,0 +1,10 @@
+{
+	"name": "trainingkeyvaultconnection",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://trainingkeyvaultv2swati.vault.azure.net/"
+		}
+	}
+}
