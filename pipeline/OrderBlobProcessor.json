@@ -292,6 +292,60 @@
 								"referenceName": "BlobMetaDataSQLConnection",
 								"type": "LinkedServiceReference"
 							}
+						},
+						{
+							"name": "ProcessOrdersDataflow",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [
+								{
+									"activity": "DLSTargetInformation",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "ProcessOrdersDataflow",
+									"type": "DataFlowReference",
+									"datasetParameters": {
+										"OrderInputSource": {
+											"containerName": {
+												"value": "@activity('DLSTargetInformation').output.containerName",
+												"type": "Expression"
+											},
+											"folder": {
+												"value": "@activity('DLSTargetInformation').output.path",
+												"type": "Expression"
+											},
+											"fileName": {
+												"value": "@activity('DLSTargetInformation').output.blobName",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								"staging": {
+									"linkedService": {
+										"referenceName": "OrdersBlobStorageConnection",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "staging-data"
+								},
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
+								},
+								"traceLevel": "Fine"
+							}
 						}
 					]
 				}
