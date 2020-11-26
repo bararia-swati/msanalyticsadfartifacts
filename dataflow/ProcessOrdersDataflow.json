@@ -11,11 +11,54 @@
 						"type": "DatasetReference"
 					},
 					"name": "OrderInputSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "CustomerDLSDataset",
+						"type": "DatasetReference"
+					},
+					"name": "CustomersDataSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "ProductsDLSDataset",
+						"type": "DatasetReference"
+					},
+					"name": "ProductsDataSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "CapitalCitiesDataset",
+						"type": "DatasetReference"
+					},
+					"name": "CapitalcitiesDataSource"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "source(output(\n\t\torderid as string,\n\t\torderdate as string,\n\t\tcustomer as integer,\n\t\tproduct as integer,\n\t\tunits as integer,\n\t\tbillingaddress as string,\n\t\tremarks as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> OrderInputSource"
+			"transformations": [
+				{
+					"name": "OrderandCustomer"
+				},
+				{
+					"name": "OrderCustomerandProduct"
+				},
+				{
+					"name": "OrderJoinedOutput"
+				},
+				{
+					"name": "SelectedColumn"
+				},
+				{
+					"name": "PreparedColumns"
+				},
+				{
+					"name": "CleansedCloumns"
+				},
+				{
+					"name": "ProcessedOrders"
+				}
+			],
+			"script": "source(output(\n\t\torderid as string,\n\t\torderdate as string,\n\t\tcustomer as integer,\n\t\tproduct as integer,\n\t\tunits as integer,\n\t\tbillingaddress as string,\n\t\tremarks as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> OrderInputSource\nsource(output(\n\t\tcustomerid as integer,\n\t\tfullname as string,\n\t\taddress as string,\n\t\tcredit as integer,\n\t\tstatus as boolean\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CustomersDataSource\nsource(output(\n\t\titemdiscount as short,\n\t\tproductid as short,\n\t\ttitle as string,\n\t\tunitprice as short,\n\t\tunitsinstock as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'arrayOfDocuments') ~> ProductsDataSource\nsource(output(\n\t\tCityId as integer,\n\t\tCityName as string,\n\t\tRegion as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> CapitalcitiesDataSource\nOrderInputSource, CustomersDataSource join(customer == customerid,\n\tjoinType:'inner',\n\tbroadcast: 'right')~> OrderandCustomer\nOrderandCustomer, ProductsDataSource join(product == productid,\n\tjoinType:'inner',\n\tbroadcast: 'right')~> OrderCustomerandProduct\nOrderCustomerandProduct, CapitalcitiesDataSource join(address == CityName,\n\tjoinType:'inner',\n\tbroadcast: 'right')~> OrderJoinedOutput\nOrderJoinedOutput select(mapColumn(\n\t\torderid,\n\t\torderdate,\n\t\tunits,\n\t\tbillingaddress,\n\t\tfullname,\n\t\tcustomerlocation = address,\n\t\tcredit,\n\t\tstatus,\n\t\titemdiscount,\n\t\ttitle,\n\t\tunitprice,\n\t\tunitsinstock,\n\t\tRegion\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectedColumn\nSelectedColumn derive(orderamount = units * unitprice,\n\t\tdiscountamount = toInteger(units * unitprice * itemdiscount * 0.01),\n\t\tcustomertype = iif(credit < 1000, \"Silver\", iif(credit >= 10000 && credit < 1000, \"Gold\", \"Platinum\")),\n\t\tactivestatus = iif(status, \"Active\", \"Inactive\")) ~> PreparedColumns\nPreparedColumns select(mapColumn(\n\t\torderid,\n\t\torderdate,\n\t\tunits,\n\t\tbillingaddress,\n\t\tfullname,\n\t\tcustomerlocation,\n\t\tcredit,\n\t\ttitle,\n\t\tunitprice,\n\t\tunitsinstock,\n\t\tRegion,\n\t\torderamount,\n\t\tdiscountamount,\n\t\tcustomertype,\n\t\tactivestatus\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CleansedCloumns\nCleansedCloumns filter(credit >= orderamount && unitsinstock >= units) ~> ProcessedOrders"
 		}
 	}
 }
