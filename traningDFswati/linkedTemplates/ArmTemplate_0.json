@@ -84,6 +84,56 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CustomerDLSDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OrganizedDLSConnection",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "customers.csv",
+						"folderPath": "master-data",
+						"fileSystem": "organized-data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "customerid",
+						"type": "String"
+					},
+					{
+						"name": "fullname",
+						"type": "String"
+					},
+					{
+						"name": "address",
+						"type": "String"
+					},
+					{
+						"name": "credit",
+						"type": "String"
+					},
+					{
+						"name": "status",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OrganizedDLSConnection')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/OrdersBlobStorageDataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -240,52 +290,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BlobMetaDataSQLConnection')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('BlobMetaDataSQLConnection_connectionString')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "trainingkeyvaultconnection",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "sqlpassword"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/trainingkeyvaultconnection')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DLSTargetProviderFunctionConnection')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureFunction",
-				"typeProperties": {
-					"functionAppUrl": "[parameters('DLSTargetProviderFunctionConnection_properties_typeProperties_functionAppUrl')]",
-					"functionKey": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "trainingkeyvaultconnection",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "functionkey"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/trainingkeyvaultconnection')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ProductsDLSDataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -330,53 +334,49 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CustomerDLSDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/BlobMetaDataSQLConnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OrganizedDLSConnection",
-					"type": "LinkedServiceReference"
-				},
 				"annotations": [],
-				"type": "DelimitedText",
+				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "customers.csv",
-						"folderPath": "master-data",
-						"fileSystem": "organized-data"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "customerid",
-						"type": "String"
-					},
-					{
-						"name": "fullname",
-						"type": "String"
-					},
-					{
-						"name": "address",
-						"type": "String"
-					},
-					{
-						"name": "credit",
-						"type": "String"
-					},
-					{
-						"name": "status",
-						"type": "String"
+					"connectionString": "[parameters('BlobMetaDataSQLConnection_connectionString')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "trainingkeyvaultconnection",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "sqlpassword"
 					}
-				]
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/OrganizedDLSConnection')]"
+				"[concat(variables('factoryId'), '/linkedServices/trainingkeyvaultconnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DLSTargetProviderFunctionConnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureFunction",
+				"typeProperties": {
+					"functionAppUrl": "[parameters('DLSTargetProviderFunctionConnection_properties_typeProperties_functionAppUrl')]",
+					"functionKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "trainingkeyvaultconnection",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "functionkey"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/trainingkeyvaultconnection')]"
 			]
 		},
 		{

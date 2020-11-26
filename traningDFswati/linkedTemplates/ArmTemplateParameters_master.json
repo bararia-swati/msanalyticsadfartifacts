@@ -8,13 +8,13 @@
 		"BlobMetaDataSQLConnection_connectionString": {
 			"value": ""
 		},
+		"Datawarehouse_connectionString": {
+			"value": ""
+		},
 		"OrdersBlobStorageConnection_connectionString": {
 			"value": ""
 		},
 		"OrganizedDLSConnection_accountKey": {
-			"value": ""
-		},
-		"Datawarehouse_connectionString": {
 			"value": ""
 		},
 		"DLSTargetProviderFunctionConnection_properties_typeProperties_functionAppUrl": {
