@@ -8,20 +8,23 @@
 		"BlobMetaDataSQLConnection_connectionString": {
 			"value": ""
 		},
-		"OrganizedDLSConnection_accountKey": {
-			"value": ""
-		},
 		"OrdersBlobStorageConnection_connectionString": {
 			"value": ""
 		},
-		"trainingkeyvaultconnection_properties_typeProperties_baseUrl": {
-			"value": "https://trainingkeyvaultv2swati.vault.azure.net/"
+		"OrganizedDLSConnection_accountKey": {
+			"value": ""
+		},
+		"Datawarehouse_connectionString": {
+			"value": ""
 		},
 		"DLSTargetProviderFunctionConnection_properties_typeProperties_functionAppUrl": {
 			"value": "https://dlstargetprovider20201125160234.azurewebsites.net"
 		},
 		"OrganizedDLSConnection_properties_typeProperties_url": {
 			"value": "https://trainingdlsswati.dfs.core.windows.net"
+		},
+		"trainingkeyvaultconnection_properties_typeProperties_baseUrl": {
+			"value": "https://trainingkeyvaultv2swati.vault.azure.net/"
 		}
 	}
 }
