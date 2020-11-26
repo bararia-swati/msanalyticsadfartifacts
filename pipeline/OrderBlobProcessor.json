@@ -78,7 +78,7 @@
 							}
 						},
 						{
-							"name": "Copy data1",
+							"name": "Copy Blob Data to DLS",
 							"type": "Copy",
 							"dependsOn": [
 								{
@@ -255,7 +255,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Copy data1",
+									"activity": "Copy Blob Data to DLS",
 									"dependencyConditions": [
 										"Succeeded"
 									]
