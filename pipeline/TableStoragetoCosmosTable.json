@@ -24,7 +24,7 @@
 						"azureTableInsertType": "merge",
 						"azureTablePartitionKeyName": "PartitionKey",
 						"azureTableRowKeyName": "RowKey",
-						"writeBatchSize": 4000,
+						"writeBatchSize": 1000,
 						"maxConcurrentConnections": 1
 					},
 					"enableStaging": false,
