@@ -22,11 +22,106 @@
 					"sink": {
 						"type": "AzureTableSink",
 						"azureTableInsertType": "merge",
-						"writeBatchSize": 10000
+						"azureTablePartitionKeyName": "PartitionKey",
+						"azureTableRowKeyName": "RowKey",
+						"writeBatchSize": 4000,
+						"maxConcurrentConnections": 1
 					},
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "PartitionKey",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PartitionKey"
+								}
+							},
+							{
+								"source": {
+									"name": "RowKey",
+									"type": "String"
+								},
+								"sink": {
+									"name": "RowKey"
+								}
+							},
+							{
+								"source": {
+									"name": "Timestamp",
+									"type": "DateTimeOffset"
+								},
+								"sink": {
+									"name": "Timestamp"
+								}
+							},
+							{
+								"source": {
+									"name": "Amount",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Amount"
+								}
+							},
+							{
+								"source": {
+									"name": "BillingAddress",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BillingAddress"
+								}
+							},
+							{
+								"source": {
+									"name": "Customer",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Customer"
+								}
+							},
+							{
+								"source": {
+									"name": "OrderDate",
+									"type": "String"
+								},
+								"sink": {
+									"name": "OrderDate"
+								}
+							},
+							{
+								"source": {
+									"name": "OrderID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "OrderID"
+								}
+							},
+							{
+								"source": {
+									"name": "Product",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Products"
+								}
+							},
+							{
+								"source": {
+									"name": "Remarks",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Remarks"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
