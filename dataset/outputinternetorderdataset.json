@@ -1,0 +1,15 @@
+{
+	"name": "outputinternetorderdataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "outputcdbconnection",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "internetorders"
+		}
+	}
+}
