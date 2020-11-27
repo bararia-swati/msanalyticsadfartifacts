@@ -1,0 +1,15 @@
+{
+	"name": "inputinternetordersdataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "inputblobstorageconnection",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "internetorders"
+		}
+	}
+}
