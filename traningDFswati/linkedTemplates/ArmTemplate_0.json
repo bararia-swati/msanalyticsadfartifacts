@@ -15,6 +15,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'OrganizedDLSConnection'"
 		},
+		"inputblobstorageconnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'inputblobstorageconnection'"
+		},
+		"outputcdbconnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'outputcdbconnection'"
+		},
 		"BlobMetaDataSQLConnection_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'BlobMetaDataSQLConnection'"
@@ -79,6 +87,32 @@
 				"type": "AzureKeyVault",
 				"typeProperties": {
 					"baseUrl": "[parameters('trainingkeyvaultconnection_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/inputblobstorageconnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureTableStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('inputblobstorageconnection_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/outputcdbconnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureTableStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('outputcdbconnection_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -403,6 +437,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/inputinternetordersdataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "inputblobstorageconnection",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "internetorders"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/inputblobstorageconnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/outputinternetorderdataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "outputcdbconnection",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "internetorders"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/outputcdbconnection')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/BlobMetadataDatadest')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -608,6 +682,163 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Datawarehouse')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TableStoragetoCosmosTable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Movefromtabletocosmos",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureTableSource",
+								"azureTableSourceIgnoreTableNotFound": false
+							},
+							"sink": {
+								"type": "AzureTableSink",
+								"azureTableInsertType": "merge",
+								"azureTablePartitionKeyName": "PartitionKey",
+								"azureTableRowKeyName": "RowKey",
+								"writeBatchSize": 4000,
+								"maxConcurrentConnections": 1
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "PartitionKey",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PartitionKey"
+										}
+									},
+									{
+										"source": {
+											"name": "RowKey",
+											"type": "String"
+										},
+										"sink": {
+											"name": "RowKey"
+										}
+									},
+									{
+										"source": {
+											"name": "Timestamp",
+											"type": "DateTimeOffset"
+										},
+										"sink": {
+											"name": "Timestamp"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Amount"
+										}
+									},
+									{
+										"source": {
+											"name": "BillingAddress",
+											"type": "String"
+										},
+										"sink": {
+											"name": "BillingAddress"
+										}
+									},
+									{
+										"source": {
+											"name": "Customer",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Customer"
+										}
+									},
+									{
+										"source": {
+											"name": "OrderDate",
+											"type": "String"
+										},
+										"sink": {
+											"name": "OrderDate"
+										}
+									},
+									{
+										"source": {
+											"name": "OrderID",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "OrderID"
+										}
+									},
+									{
+										"source": {
+											"name": "Product",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Products"
+										}
+									},
+									{
+										"source": {
+											"name": "Remarks",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Remarks"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "inputinternetordersdataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "outputinternetorderdataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"concurrency": 1,
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/inputinternetordersdataset')]",
+				"[concat(variables('factoryId'), '/datasets/outputinternetorderdataset')]"
 			]
 		},
 		{

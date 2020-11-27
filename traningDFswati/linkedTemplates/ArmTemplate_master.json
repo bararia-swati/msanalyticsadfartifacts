@@ -23,6 +23,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'OrganizedDLSConnection'"
 		},
+		"inputblobstorageconnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'inputblobstorageconnection'"
+		},
+		"outputcdbconnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'outputcdbconnection'"
+		},
 		"DLSTargetProviderFunctionConnection_properties_typeProperties_functionAppUrl": {
 			"type": "string",
 			"defaultValue": "https://dlstargetprovider20201125160234.azurewebsites.net"
@@ -67,6 +75,12 @@
 					},
 					"OrganizedDLSConnection_accountKey": {
 						"value": "[parameters('OrganizedDLSConnection_accountKey')]"
+					},
+					"inputblobstorageconnection_connectionString": {
+						"value": "[parameters('inputblobstorageconnection_connectionString')]"
+					},
+					"outputcdbconnection_connectionString": {
+						"value": "[parameters('outputcdbconnection_connectionString')]"
 					},
 					"BlobMetaDataSQLConnection_connectionString": {
 						"value": "[parameters('BlobMetaDataSQLConnection_connectionString')]"
